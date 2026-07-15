@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: weather-forecast-dashboard
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENWEATHERMAP_API_KEY
+        sync: false # The user will configure this key in the Render dashboard
