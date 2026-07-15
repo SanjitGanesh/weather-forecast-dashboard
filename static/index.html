@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium, glassmorphic weather forecast app utilizing OpenWeatherMap. View interactive temperature charts and dynamic weather cards.">
+    <title>CloudCast - Premium Weather Dashboard</title>
+    <!-- Tab Favicon (Animated SVG) -->
+    <link rel="icon" type="image/svg+xml" href="https://cdn.jsdelivr.net/npm/@meteocons/svg@latest/fill/partly-cloudy-day.svg">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-glows">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <main class="dashboard-container">
+        <header class="app-header">
+            <div class="logo">
+                <i data-lucide="cloud-sun" class="logo-icon"></i>
+                <h1>CloudCast</h1>
+            </div>
+            
+            <form id="search-form" class="search-form">
+                <div class="search-input-wrapper">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="city-input" placeholder="Search city (e.g., Tokyo, London)..." required autocomplete="off" list="cities-list">
+                    <datalist id="cities-list"></datalist>
+                </div>
+                <button type="submit" id="search-btn">
+                    <span>Search</span>
+                    <i data-lucide="arrow-right"></i>
+                </button>
+            </form>
+        </header>
+
+        <section id="welcome-state" class="info-state">
+            <div class="info-content">
+                <div class="animated-icon-wrapper">
+                    <i data-lucide="cloud-lightning" class="welcome-icon"></i>
+                </div>
+                <h2>Explore the Weather</h2>
+                <p>Enter a city above to retrieve real-time data, detailed interactive charts, and 5-day forecasts.</p>
+            </div>
+        </section>
+
+        <section id="loading-state" class="info-state hidden">
+            <div class="spinner"></div>
+            <p>Fetching weather data...</p>
+        </section>
+
+        <section id="error-state" class="info-state hidden">
+            <div class="info-content">
+                <i data-lucide="alert-circle" class="error-icon"></i>
+                <h2 id="error-title">City Not Found</h2>
+                <p id="error-message">We couldn't retrieve weather data for this location. Please check the spelling and try again.</p>
+            </div>
+        </section>
+
+        <section id="dashboard-content" class="dashboard-content hidden">
+            <!-- First Row: Current Summary & Chart -->
+            <div class="dashboard-row top-row">
+                <!-- Current Weather Card -->
+                <div class="glass-card current-weather-card" id="current-card">
+                    <div class="card-header">
+                        <span class="badge">Current Weather</span>
+                        <h2 id="current-city" class="city-name">Tokyo</h2>
+                        <p id="current-date" class="current-date">Wednesday, July 15</p>
+                    </div>
+
+                    <div class="current-main">
+                        <div class="temp-display">
+                            <span id="current-temp" class="temp-value">28</span><span class="temp-unit">°C</span>
+                        </div>
+                        <div class="weather-visual">
+                            <img id="current-icon" src="images/clear.png" alt="Weather condition" class="current-weather-img">
+                            <span id="current-desc" class="weather-description">Clear Sky</span>
+                        </div>
+                    </div>
+
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i data-lucide="droplets" class="detail-icon"></i>
+                            <div>
+                                <span class="detail-label">Humidity</span>
+                                <span id="detail-humidity" class="detail-val">65%</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i data-lucide="wind" class="detail-icon"></i>
+                            <div>
+                                <span class="detail-label">Wind</span>
+                                <span id="detail-wind" class="detail-val">12 km/h</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i data-lucide="compass" class="detail-icon"></i>
+                            <div>
+                                <span class="detail-label">Pressure</span>
+                                <span id="detail-pressure" class="detail-val">1012 hPa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temperature Chart Card -->
+                <div class="glass-card chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3>Temperature Trend</h3>
+                            <p>Hourly forecast updates</p>
+                        </div>
+                        <div class="days-filter-wrapper">
+                            <label for="days-slider">Days to view: <span id="days-slider-val">5</span></label>
+                            <input type="range" id="days-slider" min="1" max="5" value="5" step="1">
+                        </div>
+                    </div>
+                    <div id="chart-container">
+                        <div id="temp-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row: Forecast Grid -->
+            <div class="forecast-section">
+                <div class="forecast-section-header">
+                    <h3>5-Day Forecast (3-Hour Intervals)</h3>
+                    <p>Scroll horizontally to view upcoming conditions</p>
+                </div>
+                <div id="forecast-grid" class="forecast-grid">
+                    <!-- Forecast cards will be dynamically injected here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 CloudCast. Powering by OpenWeatherMap API.</p>
+    </footer>
+
+    <!-- JS Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
